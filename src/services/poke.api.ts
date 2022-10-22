@@ -1,9 +1,7 @@
-import { IPokemon } from '../models/pokeInterface.js';
-
 export class PokeApi {
     url: string;
     constructor() {
-        this.url = 'https://pokeapi.co/api/v2/pokemon/limit=20&offset=0';
+        this.url = 'https://pokeapi.co/api/v2/pokemon/';
     }
 
     // read / get
