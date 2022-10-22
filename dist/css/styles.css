@@ -11,15 +11,10 @@ body {
 
 header,
 footer {
-    display: block;
+    display: flex;
     flex: 1 0 auto;
     justify-content: center;
     align-items: center;
-}
-
-h1 {
-    font-size: 1em;
-    color: rgb(89, 94, 31);
 }
 
 main {
