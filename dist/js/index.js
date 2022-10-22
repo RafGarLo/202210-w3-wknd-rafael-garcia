@@ -1,10 +1,5 @@
+import { Header } from './components/header.js';
 import { PokePrint } from './components/pokeprint.js';
-console.log('Hola');
-// const getPoke = () => {
-//   return fetch(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`).then(
-//     (response) => response.json()
-//   );
-// };
-// const test1 = getPoke();
-// console.log(test1);
+new Header('body');
 new PokePrint(`body`);
+//new PokePages();
