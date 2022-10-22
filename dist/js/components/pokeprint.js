@@ -38,9 +38,10 @@ export class PokePrint extends Component {
     createTemplate() {
         this.template = '';
         this.pokesInfo.forEach((pokemon) => {
-            this.template += `<h1>${pokemon.species.name}</h1>`;
-            this.template += `<img src="${pokemon.sprites.front_default}" alt="" width="100">
-      `;
+            this.template += `
+            <div class="pokes-container"><h2 class="pokes-name">${pokemon.species.name}</h2>`;
+            this.template += `<img class="pokes-img" src="${pokemon.sprites.front_default}" alt="" width="100">
+       </div>`;
         });
         return this.template;
     }
