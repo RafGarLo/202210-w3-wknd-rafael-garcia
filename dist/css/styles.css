@@ -23,3 +23,20 @@ main {
     gap: 4rem;
     padding: 1rem;
 }
+.buttons-container {
+    width: 90vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button {
+    background-color: rgb(240, 205, 29);
+    height: 2rem;
+    border-radius: 10px;
+    width: 6rem;
+    margin: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
