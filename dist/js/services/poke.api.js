@@ -1,13 +1,27 @@
 export class PokeApi {
     constructor() {
-        this.url = 'https://pokeapi.co/api/v2/pokemon/';
+        this.urlDefault = 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=0';
     }
     // read / get
     getPoke() {
-        return fetch(this.url).then((response) => response.json());
+        return fetch(this.urlDefault).then((response) => response.json());
+    }
+}
+export class PokePages {
+    constructor() {
+        this.urlPagination =
+            'https://pokeapi.co/api/v2/pokemon?offset=20&limit=20';
+    }
+    getPokePage() {
+        return fetch(this.urlPagination).then((response) => response.json());
     }
 }
 /*
+
+
+
+
+fetch(‘https://pokeapi.co/api/v2/pokemon?limit=151')  .then(response => response.json())  .then(allpokemon => console.log(allpokemon))
     // create / post
     createTask(task: IPokemon): Promise<PokeApi> {
         return fetch(this.url, {

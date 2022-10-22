@@ -14,24 +14,33 @@ export class PokePrint extends Component {
         super();
         this.selector = selector;
         this.api = new PokeApi();
-        this.pokes = '';
-        this.startPrint();
+        this.pokes = [];
+        this.pokesInfo = '';
+        this.startFetch();
     }
-    startPrint() {
+    startFetch() {
         return __awaiter(this, void 0, void 0, function* () {
             this.pokes = yield this.api.getPoke();
+            console.log(this.pokes);
+            const pokemonArr = [];
+            this.pokes.results.forEach((item) => {
+                pokemonArr.push(item.url);
+            });
+            this.pokesInfo = yield Promise.all(pokemonArr.map((url) => fetch(url).then((r) => r.json())));
+            //console.log(this.pokesInfo);
             this.manageComponent();
         });
     }
     manageComponent() {
-        console.log(this.pokes);
         this.template = this.createTemplate();
         this.renderAdd(this.selector, this.template);
     }
     createTemplate() {
         this.template = '';
-        this.pokes.results.forEach((pokemon) => {
-            this.template += `<h2>${pokemon.name}</h2>`;
+        this.pokesInfo.forEach((pokemon) => {
+            this.template += `<h1>${pokemon.species.name}</h1>`;
+            this.template += `<img src="${pokemon.sprites.front_default}" alt="" width="100">
+      `;
         });
         return this.template;
     }
