@@ -16,6 +16,7 @@ export class PokePrint extends Component {
         this.api = new PokeApi();
         this.pokes = [];
         this.pokesInfo = [];
+        this.prevPokesInfo = [];
         this.startFetch();
     }
     startFetch() {
@@ -28,6 +29,16 @@ export class PokePrint extends Component {
             this.pokesInfo = yield Promise.all(pokemonArr.map((url) => fetch(url).then((r) => r.json())));
             this.nextFetch();
             this.manageComponent();
+        });
+    }
+    prevFetch() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.prevPokesInfo = yield this.api.getPrevPage(this.pokes.previous);
+            const prevPokeArray = [];
+            this.prevPokesInfo.results.forEach((item) => {
+                prevPokeArray.push(item.url);
+            });
+            this.prevPagePokes = yield Promise.all(prevPokeArray.map((url) => fetch(url).then((r) => r.json())));
         });
     }
     nextFetch() {
@@ -45,18 +56,20 @@ export class PokePrint extends Component {
         this.template = this.createTemplate();
         this.render(this.selector, this.template);
         (_a = document.querySelector('.btn-next')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
-            console.log(this.nextPagePokes);
+            // console.log(this.nextPagePokes);
             this.pokes = this.nextPageInfo;
             this.pokesInfo = this.nextPagePokes;
             this.nextFetch();
+            this.prevFetch();
             this.manageComponent();
         });
         (_b = document
             .querySelector('.btn-previous')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
-            console.log(this.pokesInfo);
-            this.template = this.createTemplate();
-            this.render(this.selector, this.template);
-            this.startFetch();
+            this.pokes = this.prevPokesInfo;
+            this.pokesInfo = this.prevPagePokes;
+            this.nextFetch();
+            this.prevFetch();
+            this.manageComponent();
         });
     }
     createTemplate() {

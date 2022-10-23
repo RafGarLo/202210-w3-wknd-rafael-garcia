@@ -8,11 +8,14 @@ export class PokePrint extends Component {
     api: PokeApi;
     nextPageInfo: any;
     nextPagePokes: any;
+    prevPagePokes: any;
+    prevPokesInfo: any;
     constructor(public selector: string) {
         super();
         this.api = new PokeApi();
         this.pokes = [];
         this.pokesInfo = [];
+        this.prevPokesInfo = [];
         this.startFetch();
     }
 
@@ -26,10 +29,22 @@ export class PokePrint extends Component {
         this.pokesInfo = await Promise.all(
             pokemonArr.map((url: any) => fetch(url).then((r) => r.json()))
         );
+
         this.nextFetch();
         this.manageComponent();
     }
+    async prevFetch() {
+        this.prevPokesInfo = await this.api.getPrevPage(this.pokes.previous);
 
+        const prevPokeArray: any = [];
+        this.prevPokesInfo.results.forEach((item: any) => {
+            prevPokeArray.push(item.url);
+        });
+
+        this.prevPagePokes = await Promise.all(
+            prevPokeArray.map((url: any) => fetch(url).then((r) => r.json()))
+        );
+    }
     async nextFetch() {
         this.nextPageInfo = await this.api.getNextPage(this.pokes.next);
         const nextPokeArray: any = [];
@@ -49,20 +64,21 @@ export class PokePrint extends Component {
         this.render(this.selector, this.template);
 
         document.querySelector('.btn-next')?.addEventListener('click', () => {
-            console.log(this.nextPagePokes);
             this.pokes = this.nextPageInfo;
             this.pokesInfo = this.nextPagePokes;
             this.nextFetch();
+            this.prevFetch();
             this.manageComponent();
         });
 
         document
             .querySelector('.btn-previous')
             ?.addEventListener('click', () => {
-                console.log(this.pokesInfo);
-                this.template = this.createTemplate();
-                this.render(this.selector, this.template);
-                this.startFetch();
+                this.pokes = this.prevPokesInfo;
+                this.pokesInfo = this.prevPagePokes;
+                this.nextFetch();
+                this.prevFetch();
+                this.manageComponent();
             });
     }
 
@@ -84,8 +100,5 @@ export class PokePrint extends Component {
          </div>`;
 
         return this.template;
-        // <a href=''>Atras</a>
     }
-
-    // async createArrayOfPromises() {}
 }
