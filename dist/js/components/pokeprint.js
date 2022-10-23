@@ -21,13 +21,11 @@ export class PokePrint extends Component {
     startFetch() {
         return __awaiter(this, void 0, void 0, function* () {
             this.pokes = yield this.api.getPoke();
-            //console.log(this.pokes);
             const pokemonArr = [];
             this.pokes.results.forEach((item) => {
                 pokemonArr.push(item.url);
             });
             this.pokesInfo = yield Promise.all(pokemonArr.map((url) => fetch(url).then((r) => r.json())));
-            //console.log(this.pokesInfo);
             this.nextPageInfo = yield this.api.getNextPage(this.pokes.next);
             const nextPokeArray = [];
             this.nextPageInfo.results.forEach((item) => {
@@ -43,20 +41,18 @@ export class PokePrint extends Component {
         this.renderAdd(this.selector, this.template);
         (_a = document.querySelector('.btn-next')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
             console.log(this.nextPagePokes);
+            this.pokesInfo = this.nextPagePokes;
             this.template = this.createTemplate();
             this.render(this.selector, this.template);
+            this.startFetch();
         });
-        //let nextBtn: String = this.nextPagePokes;
-        let prevBtn;
-        let nextBtn = this.nextPagePokes;
         (_b = document
             .querySelector('.btn-previous')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
-            nextBtn = prevBtn;
             console.log(this.pokesInfo);
             this.template = this.createTemplate();
             this.render(this.selector, this.template);
+            this.startFetch();
         });
-        //let prevBtn: string = this.pokesInfo;
     }
     createTemplate() {
         this.template = '';

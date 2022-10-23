@@ -18,7 +18,6 @@ export class PokePrint extends Component {
 
     async startFetch() {
         this.pokes = await this.api.getPoke();
-        //console.log(this.pokes);
 
         const pokemonArr: any = [];
         this.pokes.results.forEach((item: any) => {
@@ -27,7 +26,7 @@ export class PokePrint extends Component {
         this.pokesInfo = await Promise.all(
             pokemonArr.map((url: any) => fetch(url).then((r) => r.json()))
         );
-        //console.log(this.pokesInfo);
+
         this.nextPageInfo = await this.api.getNextPage(this.pokes.next);
         const nextPokeArray: any = [];
 
@@ -49,23 +48,20 @@ export class PokePrint extends Component {
 
         document.querySelector('.btn-next')?.addEventListener('click', () => {
             console.log(this.nextPagePokes);
+            this.pokesInfo = this.nextPagePokes;
             this.template = this.createTemplate();
             this.render(this.selector, this.template);
+            this.startFetch();
         });
-        //let nextBtn: String = this.nextPagePokes;
-        //let prevBtn: any;
-        //let nextBtn = this.nextPagePokes;
 
         document
             .querySelector('.btn-previous')
             ?.addEventListener('click', () => {
-                nextBtn = prevBtn;
                 console.log(this.pokesInfo);
-
                 this.template = this.createTemplate();
                 this.render(this.selector, this.template);
+                this.startFetch();
             });
-        //let prevBtn: string = this.pokesInfo;
     }
 
     createTemplate() {
