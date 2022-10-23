@@ -38,34 +38,42 @@ export class PokePrint extends Component {
         });
     }
     manageComponent() {
-        var _a;
-        this.template = this.createTemplate(this.pokesInfo);
+        var _a, _b;
+        this.template = this.createTemplate();
         this.renderAdd(this.selector, this.template);
         (_a = document.querySelector('.btn-next')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
             console.log(this.nextPagePokes);
-            this.template = this.createTemplate(this.nextPagePokes);
+            this.template = this.createTemplate();
             this.render(this.selector, this.template);
         });
+        //let nextBtn: String = this.nextPagePokes;
+        let prevBtn;
+        let nextBtn = this.nextPagePokes;
+        (_b = document
+            .querySelector('.btn-previous')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
+            nextBtn = prevBtn;
+            console.log(this.pokesInfo);
+            this.template = this.createTemplate();
+            this.render(this.selector, this.template);
+        });
+        //let prevBtn: string = this.pokesInfo;
     }
     createTemplate() {
         this.template = '';
         this.pokesInfo.forEach((pokemon) => {
             this.template += `
             <div class="pokes-container"><h2 class="pokes-name">${pokemon.species.name}</h2>`;
-            this.template += `<img class="pokes-img" src="${pokemon.sprites.front_default}" alt="" width="100">
+            this.template += `<img class="pokes-img" src="${pokemon.sprites.other.dream_world.front_default}" alt="" width="100">
        </div>`;
         });
         this.template += `</div>
          <div class="buttons-container">
-        <button class="btn-previous">
-         <a href=''>Atras</a>
-        </button>
+
+        <button class="btn-previous">Atras</button>
                           
-        <button class="btn-next">
-     
-          Siguiente
-         </button>
+        <button class="btn-next">Siguiente</button>
          </div>`;
         return this.template;
+        // <a href=''>Atras</a>
     }
 }
