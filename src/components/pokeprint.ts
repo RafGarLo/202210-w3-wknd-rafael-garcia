@@ -26,7 +26,11 @@ export class PokePrint extends Component {
         this.pokesInfo = await Promise.all(
             pokemonArr.map((url: any) => fetch(url).then((r) => r.json()))
         );
+        this.nextFetch();
+        this.manageComponent();
+    }
 
+    async nextFetch() {
         this.nextPageInfo = await this.api.getNextPage(this.pokes.next);
         const nextPokeArray: any = [];
 
@@ -38,20 +42,18 @@ export class PokePrint extends Component {
                 fetch(url).then((result) => result.json())
             )
         );
-
-        this.manageComponent();
     }
 
     manageComponent() {
         this.template = this.createTemplate();
-        this.renderAdd(this.selector, this.template);
+        this.render(this.selector, this.template);
 
         document.querySelector('.btn-next')?.addEventListener('click', () => {
             console.log(this.nextPagePokes);
+            this.pokes = this.nextPageInfo;
             this.pokesInfo = this.nextPagePokes;
-            this.template = this.createTemplate();
-            this.render(this.selector, this.template);
-            this.startFetch();
+            this.nextFetch();
+            this.manageComponent();
         });
 
         document

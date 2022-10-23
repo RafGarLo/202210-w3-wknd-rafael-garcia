@@ -26,25 +26,30 @@ export class PokePrint extends Component {
                 pokemonArr.push(item.url);
             });
             this.pokesInfo = yield Promise.all(pokemonArr.map((url) => fetch(url).then((r) => r.json())));
+            this.nextFetch();
+            this.manageComponent();
+        });
+    }
+    nextFetch() {
+        return __awaiter(this, void 0, void 0, function* () {
             this.nextPageInfo = yield this.api.getNextPage(this.pokes.next);
             const nextPokeArray = [];
             this.nextPageInfo.results.forEach((item) => {
                 nextPokeArray.push(item.url);
             });
             this.nextPagePokes = yield Promise.all(nextPokeArray.map((url) => fetch(url).then((result) => result.json())));
-            this.manageComponent();
         });
     }
     manageComponent() {
         var _a, _b;
         this.template = this.createTemplate();
-        this.renderAdd(this.selector, this.template);
+        this.render(this.selector, this.template);
         (_a = document.querySelector('.btn-next')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
             console.log(this.nextPagePokes);
+            this.pokes = this.nextPageInfo;
             this.pokesInfo = this.nextPagePokes;
-            this.template = this.createTemplate();
-            this.render(this.selector, this.template);
-            this.startFetch();
+            this.nextFetch();
+            this.manageComponent();
         });
         (_b = document
             .querySelector('.btn-previous')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
