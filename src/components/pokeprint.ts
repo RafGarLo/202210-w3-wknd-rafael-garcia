@@ -8,17 +8,19 @@ export class PokePrint extends Component {
     api: PokeApi;
     nextPageInfo: any;
     nextPagePokes: any;
+    prevPagePokes: any;
+    prevPokesInfo: any;
     constructor(public selector: string) {
         super();
         this.api = new PokeApi();
         this.pokes = [];
         this.pokesInfo = [];
+        this.prevPokesInfo = [];
         this.startFetch();
     }
 
     async startFetch() {
         this.pokes = await this.api.getPoke();
-        //console.log(this.pokes);
 
         const pokemonArr: any = [];
         this.pokes.results.forEach((item: any) => {
@@ -27,7 +29,23 @@ export class PokePrint extends Component {
         this.pokesInfo = await Promise.all(
             pokemonArr.map((url: any) => fetch(url).then((r) => r.json()))
         );
-        //console.log(this.pokesInfo);
+
+        this.nextFetch();
+        this.manageComponent();
+    }
+    async prevFetch() {
+        this.prevPokesInfo = await this.api.getPrevPage(this.pokes.previous);
+
+        const prevPokeArray: any = [];
+        this.prevPokesInfo.results.forEach((item: any) => {
+            prevPokeArray.push(item.url);
+        });
+
+        this.prevPagePokes = await Promise.all(
+            prevPokeArray.map((url: any) => fetch(url).then((r) => r.json()))
+        );
+    }
+    async nextFetch() {
         this.nextPageInfo = await this.api.getNextPage(this.pokes.next);
         const nextPokeArray: any = [];
 
@@ -39,19 +57,29 @@ export class PokePrint extends Component {
                 fetch(url).then((result) => result.json())
             )
         );
-
-        this.manageComponent();
     }
 
     manageComponent() {
-        this.template = this.createTemplate(this.pokesInfo);
-        this.renderAdd(this.selector, this.template);
+        this.template = this.createTemplate();
+        this.render(this.selector, this.template);
 
         document.querySelector('.btn-next')?.addEventListener('click', () => {
-            console.log(this.nextPagePokes);
-            this.template = this.createTemplate(this.nextPagePokes);
-            this.render(this.selector, this.template);
+            this.pokes = this.nextPageInfo;
+            this.pokesInfo = this.nextPagePokes;
+            this.nextFetch();
+            this.prevFetch();
+            this.manageComponent();
         });
+
+        document
+            .querySelector('.btn-previous')
+            ?.addEventListener('click', () => {
+                this.pokes = this.prevPokesInfo;
+                this.pokesInfo = this.prevPagePokes;
+                this.nextFetch();
+                this.prevFetch();
+                this.manageComponent();
+            });
     }
 
     createTemplate() {
@@ -59,24 +87,18 @@ export class PokePrint extends Component {
         this.pokesInfo.forEach((pokemon: any) => {
             this.template += `
             <div class="pokes-container"><h2 class="pokes-name">${pokemon.species.name}</h2>`;
-            this.template += `<img class="pokes-img" src="${pokemon.sprites.front_default}" alt="" width="100">
+            this.template += `<img class="pokes-img" src="${pokemon.sprites.other.dream_world.front_default}" alt="" width="100">
        </div>`;
         });
 
         this.template += `</div>
          <div class="buttons-container">
-        <button class="btn-previous">
-         <a href=''>Atras</a>
-        </button>
+
+        <button class="btn-previous">Atras</button>
                           
-        <button class="btn-next">
-     
-          Siguiente
-         </button>
+        <button class="btn-next">Siguiente</button>
          </div>`;
 
         return this.template;
     }
-
-    // async createArrayOfPromises() {}
 }
