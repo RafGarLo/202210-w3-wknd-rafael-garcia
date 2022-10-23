@@ -56,7 +56,6 @@ export class PokePrint extends Component {
         this.template = this.createTemplate();
         this.render(this.selector, this.template);
         (_a = document.querySelector('.btn-next')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
-            // console.log(this.nextPagePokes);
             this.pokes = this.nextPageInfo;
             this.pokesInfo = this.nextPagePokes;
             this.nextFetch();
@@ -88,6 +87,5 @@ export class PokePrint extends Component {
         <button class="btn-next">Siguiente</button>
          </div>`;
         return this.template;
-        // <a href=''>Atras</a>
     }
 }
