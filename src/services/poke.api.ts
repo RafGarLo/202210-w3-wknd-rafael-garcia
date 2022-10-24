@@ -15,3 +15,5 @@ export class PokeApi {
         return fetch(prevUrl).then((response) => response.json());
     }
 }
+// esta seccion se encuentra en carpeta servicios porque no "pinta" nada
+// te falta un promise.all

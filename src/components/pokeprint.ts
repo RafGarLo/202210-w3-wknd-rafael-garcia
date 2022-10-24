@@ -88,16 +88,16 @@ export class PokePrint extends Component {
             this.template += `
             <div class="pokes-container"><h2 class="pokes-name">${pokemon.species.name}</h2>`;
             this.template += `<img class="pokes-img" src="${pokemon.sprites.other.dream_world.front_default}" alt="" width="100">
-       </div>`;
+        </div>`;
         });
 
         this.template += `</div>
-         <div class="buttons-container">
+        <div class="buttons-container">
 
         <button class="btn-previous">Atras</button>
                           
         <button class="btn-next">Siguiente</button>
-         </div>`;
+        </div>`;
 
         return this.template;
     }
